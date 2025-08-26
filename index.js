@@ -53,11 +53,18 @@ function appendNumber(numberString){
         display.textContent = ''
         clearDisplay = false
     }
+    if(numberString === '.' && display.textContent.includes('.')){return}
     if (display.textContent === '0' || display.textContent === firstNumber){
             display.textContent = numberString
         }else {display.textContent += numberString}
 }
 function setOperator(op){
+    if (operator && secondNumber){
+        calculate()
+        firstNumber = display.textContent
+        secondNumber = ''
+    }
+    if(firstNumber === ''){firstNumber = display.textContent}
     firstNumber = display.textContent
     operator = op
     clearDisplay = true
@@ -65,8 +72,17 @@ function setOperator(op){
 function calculate(){
     secondNumber = display.textContent
     result = operate(operator, Number(firstNumber), Number(secondNumber))
-    display.textContent = result
-    console.log(result)
+    if(typeof result === 'string'){
+         display.textContent = result   
+    }else {
+        result = Math.round(result * 10000) / 10000
+        display.textContent = result
+    }
+    firstNumber = display.textContent
+    operator = null
+    secondNumber = ''
+    clearDisplay = true
+    // console.log(result)
 }
 numberButton.forEach(press => {
     press.addEventListener('click', () => {
